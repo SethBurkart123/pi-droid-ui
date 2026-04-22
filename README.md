@@ -2,6 +2,8 @@
 
 A Droid-inspired, compact TUI extension for [pi](https://github.com/mariozechner/pi) — the terminal coding agent. Enhances the built-in tool rendering with syntax highlighting, tree views, split-view diffs, Nerd Font icons, and a tighter layout.
 
+![pi-droid-ui screenshot](docs/screenshot.png)
+
 ## Features
 
 Per-tool rendering overrides:
