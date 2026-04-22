@@ -7,8 +7,9 @@ import { basename, extname } from "node:path";
 import { FG_BLUE, FG_DIM, RST } from "./ansi.js";
 import { USE_ICONS } from "./config.js";
 
-const NF_DIR = `${FG_BLUE}\ue5ff${RST}`;
-const NF_DEFAULT = `${FG_DIM}\uf15b${RST}`;
+// Lazy — evaluated after initThemeColors() has run.
+function nfDir(): string { return `${FG_BLUE}\ue5ff${RST}`; }
+function nfDefault(): string { return `${FG_DIM}\uf15b${RST}`; }
 
 const EXT_ICON: Record<string, string> = {
   ts: `\x1b[38;2;49;120;198m\ue628${RST}`,
@@ -83,9 +84,9 @@ export function fileIcon(fp: string): string {
   const base = basename(fp).toLowerCase();
   if (NAME_ICON[base]) return `${NAME_ICON[base]} `;
   const ext = extname(fp).slice(1).toLowerCase();
-  return EXT_ICON[ext] ? `${EXT_ICON[ext]} ` : `${NF_DEFAULT} `;
+  return EXT_ICON[ext] ? `${EXT_ICON[ext]} ` : `${nfDefault()} `;
 }
 
 export function dirIcon(): string {
-  return USE_ICONS ? `${NF_DIR} ` : "";
+  return USE_ICONS ? `${nfDir()} ` : "";
 }

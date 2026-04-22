@@ -1,33 +1,64 @@
 /**
  * ANSI constants and low-level ANSI-aware string utilities.
  * No background manipulation — clean terminal default.
+ *
+ * Foreground color vars are initialized to sensible defaults and then
+ * overwritten by `initThemeColors(theme)` at extension load time so
+ * they follow the active pi theme (dark-flat, light, etc.).
  */
 
 export const RST = "\x1b[0m";
 export const BOLD = "\x1b[1m";
 export const DIM = "\x1b[2m";
 
-export const FG_LNUM = "\x1b[38;2;100;100;100m";
-export const FG_DIM = "\x1b[38;2;80;80;80m";
-export const FG_RULE = "\x1b[38;2;50;50;50m";
-export const FG_GREEN = "\x1b[38;2;100;180;120m";
-export const FG_RED = "\x1b[38;2;200;100;100m";
-export const FG_YELLOW = "\x1b[38;2;220;180;80m";
-export const FG_BLUE = "\x1b[38;2;100;140;220m";
-export const FG_MUTED = "\x1b[38;2;139;148;158m";
-export const FG_STRIPE = "\x1b[38;2;40;40;40m";
+// ── Foreground colors ── (theme-aware, overwritten by initThemeColors) ──
+export let FG_LNUM   = "\x1b[38;2;100;100;100m";
+export let FG_DIM    = "\x1b[38;2;80;80;80m";
+export let FG_RULE   = "\x1b[38;2;50;50;50m";
+export let FG_GREEN  = "\x1b[38;2;100;180;120m";
+export let FG_RED    = "\x1b[38;2;200;100;100m";
+export let FG_YELLOW = "\x1b[38;2;220;180;80m";
+export let FG_BLUE   = "\x1b[38;2;100;140;220m";
+export let FG_MUTED  = "\x1b[38;2;139;148;158m";
+export let FG_STRIPE = "\x1b[38;2;40;40;40m";
 
-// Diff backgrounds — subtle tints on terminal default
-export const BG_ADD = "\x1b[48;2;13;26;18m";
-export const BG_DEL = "\x1b[48;2;26;13;13m";
-export const BG_ADD_W = "\x1b[48;2;26;56;37m";
-export const BG_DEL_W = "\x1b[48;2;56;26;26m";
+// ── Diff backgrounds ── (no theme equivalent — stay hardcoded) ──
+export const BG_ADD       = "\x1b[48;2;13;26;18m";
+export const BG_DEL       = "\x1b[48;2;26;13;13m";
+export const BG_ADD_W     = "\x1b[48;2;26;56;37m";
+export const BG_DEL_W     = "\x1b[48;2;56;26;26m";
 export const BG_GUTTER_ADD = "\x1b[48;2;9;18;8m";
 export const BG_GUTTER_DEL = "\x1b[48;2;18;9;8m";
-export const BG_EMPTY = "\x1b[48;2;8;8;8m";
+export const BG_EMPTY     = "\x1b[48;2;8;8;8m";
 
 export const BORDER_BAR = "▌";
-export const DIVIDER = `${FG_RULE}│${RST}`;
+export let DIVIDER = `${FG_RULE}│${RST}`;
+
+/**
+ * Initialize foreground colors from the active pi theme.
+ * Call once at extension load time. Falls back gracefully if any
+ * color key is missing (keeps the hardcoded default).
+ */
+export function initThemeColors(theme: any): void {
+  function tryFg(key: string): string | null {
+    try { return theme.getFgAnsi(key); }
+    catch { return null; }
+  }
+
+  FG_DIM    = tryFg("dim")             ?? FG_DIM;
+  FG_MUTED  = tryFg("muted")           ?? FG_MUTED;
+  FG_GREEN  = tryFg("toolDiffAdded")   ?? tryFg("success") ?? FG_GREEN;
+  FG_RED    = tryFg("toolDiffRemoved") ?? tryFg("error")   ?? FG_RED;
+  FG_YELLOW = tryFg("warning")         ?? FG_YELLOW;
+  FG_BLUE   = tryFg("border")          ?? FG_BLUE;
+  FG_RULE   = tryFg("borderMuted")     ?? FG_RULE;
+
+  // DIVIDER depends on FG_RULE, so rebuild it
+  DIVIDER = `${FG_RULE}│${RST}`;
+
+  // FG_LNUM stays slightly lighter than FG_DIM — no exact theme key.
+  // FG_STRIPE is decorative (near-black hash marks) — no theme key.
+}
 
 const ESC_RE = "\u001b";
 const ANSI_RE = new RegExp(`${ESC_RE}\\[[0-9;]*m`, "g");

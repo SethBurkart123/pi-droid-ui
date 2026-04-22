@@ -14,6 +14,7 @@
  * no background tinting, clean terminal default.
  */
 
+import { initThemeColors } from "./src/ansi.js";
 import { BatchState } from "./src/batching.js";
 import { patchPiToolExecution } from "./src/patch.js";
 import { shortPath } from "./src/terminal.js";
@@ -42,6 +43,13 @@ export default function droidUI(pi: any): void {
     return;
   }
   if (!TextComponent) return;
+
+  // Sync ANSI color vars with the active pi theme so our rendering
+  // follows the user's chosen palette (dark-flat, light, etc.).
+  try {
+    const { theme } = require("@mariozechner/pi-coding-agent/dist/modes/interactive/theme/theme.js");
+    if (theme) initThemeColors(theme);
+  } catch { /* theme not available yet — keep defaults */ }
 
   const cwd = process.cwd();
   const home = process.env.HOME ?? "";
