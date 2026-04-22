@@ -1,0 +1,38 @@
+{
+  "name": "pi-droid-ui",
+  "version": "1.0.0",
+  "description": "Droid-style compact TUI extension for pi — syntax highlighting, tree views, split-view diffs",
+  "license": "MIT",
+  "author": "Seth Burkart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SethBurkart123/pi-droid-ui.git"
+  },
+  "homepage": "https://github.com/SethBurkart123/pi-droid-ui",
+  "bugs": {
+    "url": "https://github.com/SethBurkart123/pi-droid-ui/issues"
+  },
+  "keywords": [
+    "pi",
+    "pi-coding-agent",
+    "tui",
+    "terminal",
+    "extension",
+    "droid",
+    "shiki",
+    "diff"
+  ],
+  "dependencies": {
+    "@shikijs/cli": "^4.0.2",
+    "diff": "^7.0.0"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
