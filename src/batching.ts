@@ -12,7 +12,7 @@ import { humanSize } from "./terminal.js";
 
 export interface BatchEntry { id: string; label: string; info: string; }
 
-const BATCHED_TOOLS = ["read", "find", "grep"] as const;
+const BATCHED_TOOLS = ["read", "find", "grep", "ls"] as const;
 type BatchedTool = typeof BATCHED_TOOLS[number];
 
 export class BatchState {
@@ -118,6 +118,8 @@ export class BatchState {
               e2.label = d.pattern ?? ""; e2.info = `${d.matchCount} files`;
             } else if (d?._type === "grepResult") {
               e2.label = d.pattern ? `"${d.pattern}"` : ""; e2.info = `${d.matchCount} matches`;
+            } else if (d?._type === "lsResult") {
+              e2.label = d.path ?? ""; e2.info = `${d.entryCount} entries`;
             }
           }
         }

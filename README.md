@@ -8,9 +8,9 @@ Per-tool rendering overrides:
 
 - **read** — compact header, collapses consecutive reads of the same file into a grouped view
 - **bash** — colored exit status + output preview
-- **ls** — tree-view directory listing with Nerd Font icons
+- **ls** — compact summary (`N entries`), batched across consecutive calls
 - **find** — grouped results with file-type icons, batched across consecutive calls
-- **grep** — match counts with file/line preview, batched
+- **grep** — match counts, batched across consecutive calls
 - **write** — Shiki syntax-highlighted new-file preview; split-view diff when overwriting
 - **edit** — split-view diff with word-level emphasis
 
@@ -62,7 +62,7 @@ src/
   language.ts            Extension → language mapping for Shiki
   config.ts              Shared rendering config
   diff/                  Split-view diff renderer (parse / split / inject / unified)
-  renderers/             Shared renderers (tree, find-style list)
+  renderers/             Shared renderers (find-style list)
   tools/                 Per-tool renderers (read, bash, ls, find, grep, write, edit)
 ```
 
